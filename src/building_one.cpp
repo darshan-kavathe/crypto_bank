@@ -5,7 +5,9 @@
 #include <iomanip>
 #include "building_one.h"
 
-BuildingOne::BuildingOne():rng_(SEED){
+BuildingOne::BuildingOne():rng_(SEED),vault_(),withdrawn_ids_(){
+    vault_.clear();
+    withdrawn_ids_.clear();
 }
 
 void BuildingOne::bull_market(double value){
@@ -41,7 +43,7 @@ const DestlerDoubloon& BuildingOne::doubloon(unsigned long long id) const{
 
 void BuildingOne::mint(unsigned int num_doubloons) {
     unsigned long long new_id;
-    for (int num = 0; num < num_doubloons;) {
+    for (unsigned int num = 0; num < num_doubloons;) {
         //get new random doubloon id
         new_id = rng_.rand();
         // check if id is unique
@@ -86,4 +88,5 @@ std::ostream& operator<<(std::ostream& os, const BuildingOne& b1){
         // print doubloon in vault
        os<< entry.second<<std::endl;
     }
+    return os;
 }

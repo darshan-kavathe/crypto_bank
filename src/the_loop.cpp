@@ -20,7 +20,6 @@ TheLoop::TheLoop(istream& is, bool std_in) :
         b1_{},
         wallet_{},
         commands_{} {
-
     commands_["help"] = []() {
         cout <<
              "debug\n" <<
@@ -48,65 +47,105 @@ TheLoop::TheLoop(istream& is, bool std_in) :
              "withdraw id\n" <<
              "\t- withdraw a Doubloon from building 1 vault (into back of wallet)\n";
     };
-    // TODO implement lambda expressions for remaining commands here
+
     /*
      * debug - toggle debugging of the doubloons
      */
     commands_["debug"] = []() {
         DestlerDoubloon::DEBUG = !(DestlerDoubloon::DEBUG);
     };
+
     /*
      * deposit- deposit doubloon into building 1 vault (from front of wallet)
      */
-    commands_["deposit"] = []() {
-
+    commands_["deposit"] = [this]() {
+        this->b1_.deposit(std::move(wallet_.front()));
+        this->wallet_.pop_front();
     };
+
     /*
      * doubloon id - list a doubloon in the building 1 vault by id
      */
-    commands_["doubloon id"] = []() {
-
+    commands_["doubloon"] = [this]() {
+        unsigned long long int id_;
+        in_>>std::hex>>id_>>std::dec;
+        try {
+            std::cout << (this->b1_.doubloon(id_)) << std::endl;
+        }catch(DDException& nd){
+            std::cout<<nd.what()<<std::endl;
+        }
     };
+
     /*
      * fedora #- fedoras song: decrease value of all coins in vault by #
      */
-    commands_["fedora"] = []() {
-
+    commands_["fedora"] = [this]() {
+        double value_;
+        in_>>value_;
+        this->b1_.bear_market(value_);
     };
+
     /*gun id
      *  - prelude to gunbrella: destroy a coin in vault by id*/
-    commands_["gun id"] = []() {
-
+    commands_["gun"] = [this]() {
+        unsigned long long int id_;
+        in_>>std::hex>>id_>>std::dec;
+        try {
+            this->b1_.destroy(id_);
+        }catch(DDException& nd){
+            std::cout<<nd.what()<<std::endl;
+        }
     };
-    /*quit
-    	- end program*/
-    commands_["quit"] = []() {
 
-    };
     /*ritchie #
     	- ritchie's lullaby: increase value of all coins in vault by #*/
-    commands_["ritchie"] = []() {
-
+    commands_["ritchie"] = [this]() {
+        double value_;
+        in_>>value_;
+        this->b1_.bull_market(value_);
     };
+
     /*sos #
     	- song of storms: mint # coins*/
-    commands_["debug"] = []() {
-
+    commands_["sos"] = [this]() {
+        unsigned int num_;
+        in_>>num_;
+        this->b1_.mint(num_);
     };
+
     /*vault
         - display all doubloons in building 1 vault*/
-    commands_["vault"] = []() {
-
+    commands_["vault"] = [this]() {
+        std::cout<<this->b1_;
     };
+
     /*wallet
         - display all doubloons in wallet*/
-    commands_["wallet"] = []() {
-
+    commands_["wallet"] = [this]() {
+        if(this->wallet_.size()==0){
+            std::cout<<"wallet is empty!"<<std::endl;
+        }else {
+            for (auto it = this->wallet_.begin(); it != wallet_.end(); it++) {
+                cout << *it << std::endl;
+            }
+        }
     };
+
     /*withdraw id
         - withdraw a doubloon from building 1 vault (into back of wallet)*/
-    commands_["withdraw id"] = []() {
-
+    commands_["withdraw"] = [this]() {
+        unsigned long long int id_;
+        in_ >> std::hex >> id_ >> std::dec;
+        if (this->b1_.num_doubloons() == 0) {
+            std::cout << "the vault is empty!" << std::endl;
+        }
+        else {
+            try {
+                this->wallet_.push_back(this->b1_.withdraw(id_));
+            } catch (DDException &nd) {
+                std::cout << nd.what() << std::endl;
+            }
+        }
     };
 }
 
@@ -139,8 +178,16 @@ void TheLoop::main_loop() {
             getline(in_, tmp);
         }
     }
-
-    // TODO move any Doubloons in wallet back to the vault
-
-    // TODO display the vault statistics
+    //return all doubloon from wallet to vault
+    unsigned long long int w_coins= this->wallet_.size();
+    if(w_coins>0){
+        std::cout<<"returning doubloons in wallet to bank!\n";
+    }
+    for(unsigned long long int i=0; i<w_coins;i++){
+        this->b1_.deposit(std::move(wallet_.front()));
+        this->wallet_.pop_front();
+    }
+    // display the vault statistics
+    std::cout<<"doubloons in vault: "<<(this->b1_.num_doubloons())<<std::endl;
+    std::cout<<"total worth: "<<this->b1_.total_worth()<<std::endl;
 }

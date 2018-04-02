@@ -5,8 +5,7 @@
 #include <iomanip>
 #include "destler_doubloon.h"
 bool DestlerDoubloon::DEBUG = false;
-DestlerDoubloon::DestlerDoubloon(unsigned long long id, double value): id_{id},value_{1}{
-    //TODO whats use of passing value parameter to constructor if we make only coin of value 1
+DestlerDoubloon::DestlerDoubloon(unsigned long long id, double value): id_{id},value_{value}{
     if(DEBUG){std::cout<<*this<<" being created!"<<std::endl;}
 }
 DestlerDoubloon::~DestlerDoubloon(){

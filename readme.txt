@@ -38,9 +38,11 @@ g++ -g -gdwarf-2 -Wall -Wextra -Weffc++ -pedantic -std=c++17 -c dd_main.cpp the_
 3.Executable:
 g++ -o dd_main dd_main.o the_loop.o building_one.o destler_doubloon.o rng.o
 run:
-./dd_main ../output/input1.txt > my_output1.txt
+./dd_main
+Now type commands, type "help" for list of commands.
 
 cross-check with test files:
+./dd_main ../output/input1.txt > my_output1.txt
 diff my_output1.txt ../output/output1.txt
 
 Remove object files and executable

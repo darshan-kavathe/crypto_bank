@@ -2,7 +2,9 @@ Description:
 ============
 This project contain sample code for bank-wallet system with following functionality:
 (doubloon is a imaginary crypto-coin and building 1 is a bank)
-By implementation, all coins have unique id and can be only moved and not copied.
+
+src :By implementation, all coins have unique id and can be only moved and not copied.
+src2 :Used unique pointers implementation, to ensure only single copy of coin exists.
 
 Here are the full list of commands:
     debug
@@ -32,7 +34,7 @@ Here are the full list of commands:
 
 Instruction:
 ============
-1.change directory to ../src$:
+1.change directory to ../src$: or to ../src2$:
 2.compile:
 g++ -g -gdwarf-2 -Wall -Wextra -Weffc++ -pedantic -std=c++17 -c dd_main.cpp the_loop.cpp building_one.cpp destler_doubloon.cpp rng.cpp
 3.Executable:

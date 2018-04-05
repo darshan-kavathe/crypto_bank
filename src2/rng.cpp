@@ -1,4 +1,4 @@
-#include "../src2/rng.h"
+#include "rng.h"
 
 using std::random_device;
 

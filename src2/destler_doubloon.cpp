@@ -3,7 +3,7 @@
 //
 
 #include <iomanip>
-#include "../src2/destler_doubloon.h"
+#include "destler_doubloon.h"
 bool DestlerDoubloon::DEBUG = false;
 DestlerDoubloon::DestlerDoubloon(unsigned long long id, double value): id_{id},value_{1}{
     if(DEBUG){std::cout<<*this<<" being created!"<<std::endl;}
